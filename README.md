@@ -1,10 +1,10 @@
-# Getting Started with BearPath CodeBase
+# Getting Started with MarketPlus CodeBase
 
 open your terminal on your computer and clone this repository
 
 In your terminal:
 
-### `cd bear-market`
+### `cd market-plus`
 
 ### `npm install`
 
