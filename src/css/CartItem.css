@@ -1,0 +1,33 @@
+.media {
+  height: 260;
+  height: '100px';
+  width: '100%';
+  object-fit: 'cover';
+  padding-top: '56.25%';
+}
+
+.cardContent {
+  display: flex;
+  justify-content: space-between;
+}
+
+.cartActions {
+  justify-content: space-between;
+}
+
+.buttons {
+  display: flex;
+  align-items: center;
+}
+
+.itemQuantity {
+  padding: 10;
+  margin-left: 10;
+}
+
+.container {
+  display: flex;
+  justify-content: center; /* Horizontal centering */
+  align-items: center; /* Vertical centering */
+  height: 100vh; /* Optional: Set a height for the container, often useful for vertical centering */
+}
