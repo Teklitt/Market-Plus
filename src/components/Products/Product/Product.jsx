@@ -51,10 +51,10 @@ const Product = ({ product, onAddToCart }) => {
               </Chip>
             }
           >
-            {product.price.formatted_with_symbol}
+            {product.price}
           </Typography>
           <Typography level="body-sm">
-            (<b>{product.inventory.available}</b> left in stock!)
+            (<b>{product.inventory}</b> left in stock!)
           </Typography>
         </CardContent>
 

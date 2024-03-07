@@ -27,11 +27,25 @@ function App() {
     setSelectedCategory(category)
   }
   //console.log('selectedCategory in App:', selectedCategory)
+  // const fetchProducts = async () => {
+  //   const { data } = await commerce.products.list({ limit: 100 })
+  //   setProducts(data)
+  // }
   const fetchProducts = async () => {
-    const { data } = await commerce.products.list({ limit: 100 })
-    setProducts(data)
+    try {
+      const response = await fetch('http://localhost:3001/api/product')
+      console.log('API Response:', response)
+      if (!response.ok) {
+        throw new Error('Failed to fetch products')
+      }
+      const data = await response.json()
+      setProducts(data)
+    } catch (error) {
+      console.error('Error fetching products:', error)
+    }
   }
-  //console.log(products)
+
+  console.log(products)
   const fetchCategories = async () => {
     const { data } = await commerce.categories.list()
     //setCategories(data)
