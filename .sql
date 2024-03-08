@@ -1,14 +1,17 @@
 Create product table query:
 
 CREATE TABLE `bear_market`.`products` (
-  `id` INT NOT NULL AUTO_INCREMENT,
+  `id` INT NOT NULL AUTO_INCREMENT PRIMARY KEY,
   `image` BLOB NOT NULL,
   `description` VARCHAR(100) NOT NULL,
   `name` VARCHAR(45) NOT NULL,
-  `price` FLOAT NOT NULL,
-  `inventory` INT NOT NULL,
-  PRIMARY KEY (`id`));
+  `price` DECIMAL(10, 2) NOT NULL,
+  `inventory` INT NOT NULL DEFAULT 0,
+   `created_at` TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    `updated_at` TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
+  );
 
+ 
 Add items to the product table:
 
 INSERT INTO product (description, name, price, inventory) VALUES
@@ -28,3 +31,22 @@ INSERT INTO product (description, name, price, inventory) VALUES
 ('32GB USB 3.0 flash drive', 'USB Flash Drive', 12.49, 140),
 ('Gourmet dark chocolate, 85% cocoa, 100g', 'Dark Chocolate', 7.99, 160);
 
+
+CREATE TABLE carts (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    user_id INT NOT NULL,  -- Foreign key referencing the user who owns the cart
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
+);
+
+CREATE TABLE cart_items (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    cart_id INT NOT NULL,  -- Foreign key referencing the cart to which the item belongs
+    product_id INT NOT NULL,  -- Foreign key referencing the product in the cart
+    quantity INT NOT NULL,
+    price DECIMAL(10, 2) NOT NULL,  -- Price per unit of the product
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+    FOREIGN KEY (cart_id) REFERENCES carts(id),
+    FOREIGN KEY (product_id) REFERENCES products(id)
+);

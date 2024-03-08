@@ -22,7 +22,7 @@ const Product = ({ product, onAddToCart }) => {
       >
         <CardOverflow>
           <AspectRatio sx={{ minWidth: 200 }}>
-            <img src={product.image.url} alt={product.name} loading="lazy" />
+            <img src={product.image} alt={product.name} loading="lazy" />
           </AspectRatio>
         </CardOverflow>
         <CardContent>
@@ -51,7 +51,7 @@ const Product = ({ product, onAddToCart }) => {
               </Chip>
             }
           >
-            {product.price}
+            ${product.price}
           </Typography>
           <Typography level="body-sm">
             (<b>{product.inventory}</b> left in stock!)
