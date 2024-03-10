@@ -27,14 +27,14 @@ const CartItem = ({ item, onUpdateCartQty, onRemoveFromCart }) => {
       >
         <CardOverflow>
           <AspectRatio sx={{ minWidth: 200 }}>
-            <img src={item.image.url} alt={item.name} loading="lazy" />
+            <img src={item.image} alt={item.name} loading="lazy" />
           </AspectRatio>
         </CardOverflow>
 
         <CardContent>
           <Typography level="body-xs">{item.description}</Typography>
           <Typography level="title-lg" sx={{ mt: 1, fontWeight: 'xl' }}>
-            {item.line_total.formatted_with_symbol}
+            ${item.price}
           </Typography>
         </CardContent>
         <CardActions className="cardActions">

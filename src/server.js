@@ -1,6 +1,7 @@
 const express = require('express')
 const cors = require('cors')
 const productsRouter = require('./endpoints/products')
+const cartsRouter = require('./endpoints/carts')
 
 const app = express()
 const port = 3001
@@ -9,6 +10,7 @@ const port = 3001
 app.use(cors())
 
 app.use('/api', productsRouter)
+app.use('/api', cartsRouter)
 
 app.listen(port, () => {
   console.log(`Server running on port ${port}`)

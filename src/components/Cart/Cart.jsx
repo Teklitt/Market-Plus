@@ -8,6 +8,14 @@ import { Link } from 'react-router-dom'
 import { ThemeProvider, createTheme } from '@mui/material/styles'
 
 const Cart = ({ cart, onUpdateCartQty, onRemoveFromCart, onEmptyCart }) => {
+  // Function to calculate subtotal
+  const calculateSubtotal = () => {
+    let subtotal = 0
+    cart.forEach((item) => {
+      subtotal += item.price * item.quantity // Assuming each item has a 'price' and 'quantity' property
+    })
+    return subtotal
+  }
   const theme = createTheme({})
   const EmptyCart = () => (
     <Typography variant="subtitle1">
@@ -22,7 +30,7 @@ const Cart = ({ cart, onUpdateCartQty, onRemoveFromCart, onEmptyCart }) => {
   const FilledCart = () => (
     <>
       <Grid container spacing={3}>
-        {cart.line_items.map((item) => (
+        {cart.map((item) => (
           <Grid item xs={12} sm={4} key={item.id}>
             <CartItem
               item={item}
@@ -42,7 +50,8 @@ const Cart = ({ cart, onUpdateCartQty, onRemoveFromCart, onEmptyCart }) => {
           }}
         >
           <Typography variant="h4" sx={{ marginTop: 10 }}>
-            Subtotal: {cart.subtotal.formatted_with_symbol}
+            {/* Subtotal: {cart.subtotal.formatted_with_symbol} */}
+            Subtotal: ${calculateSubtotal()}
           </Typography>
         </div>
         <div>
@@ -80,9 +89,9 @@ const Cart = ({ cart, onUpdateCartQty, onRemoveFromCart, onEmptyCart }) => {
       </div>
     </>
   )
-  if (!cart.line_items)
+  if (!cart)
     return (
-      <Box sx={{ width: '100%' }}>
+      <Box sx={{ width: '50%' }}>
         <LinearProgress />
       </Box>
     )
@@ -92,7 +101,7 @@ const Cart = ({ cart, onUpdateCartQty, onRemoveFromCart, onEmptyCart }) => {
         <Typography sx={{}} variant="h3" gutterBottom>
           Your Shopping Cart
         </Typography>
-        {!cart.line_items.length ? <EmptyCart /> : <FilledCart />}
+        {!cart.length ? <EmptyCart /> : <FilledCart />}
       </div>
     </Container>
   )

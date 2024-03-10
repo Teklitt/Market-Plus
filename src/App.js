@@ -44,16 +44,34 @@ function App() {
       console.error('Error fetching products:', error)
     }
   }
+  //console.log(products)
 
-  console.log(products)
   const fetchCategories = async () => {
     const { data } = await commerce.categories.list()
     //setCategories(data)
   }
   // console.log(categories)
-  const fetchCart = async () => {
-    setCart(await commerce.cart.retrieve())
+
+  // const fetchCart = async () => {
+  //   setCart(await commerce.cart.retrieve())
+  // }
+
+  const userId = '1'
+  const fetchCart = async (userId) => {
+    try {
+      const response = await fetch(
+        `http://localhost:3001/api/cart?userId=${userId}`
+      )
+      if (!response.ok) {
+        throw new Error('Failed to fetch cart')
+      }
+      const data = await response.json()
+      setCart(data) // Assuming setCart is a state setter function
+    } catch (error) {
+      console.error('Error fetching cart:', error)
+    }
   }
+  console.log(cart)
 
   const handleAddToCart = async (productId, quantity) => {
     const item = await commerce.cart.add(productId, quantity)
