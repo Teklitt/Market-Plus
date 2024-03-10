@@ -57,7 +57,7 @@ function App() {
   // }
 
   const userId = '1'
-  const fetchCart = async (userId) => {
+  const fetchCart = async () => {
     try {
       const response = await fetch(
         `http://localhost:3001/api/cart?userId=${userId}`
