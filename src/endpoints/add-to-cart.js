@@ -16,8 +16,8 @@ router.post('/add-to-cart', async (req, res) => {
 
   try {
     // Check if the product exists in the database
-    const [product] = await connection.query(
-      'SELECT * FROM products WHERE id = ?',
+    const product = await connection.query(
+      'SELECT * FROM product WHERE id = ?',
       [productId]
     )
 
@@ -27,14 +27,13 @@ router.post('/add-to-cart', async (req, res) => {
 
     // Add the product to the cart in the database
     await connection.query(
-      'INSERT INTO cart_items (product_id, quantity) VALUES (?, ?)',
-      [productId, quantity]
+      // 'INSERT INTO cart_items (product_id, quantity) VALUES (?, ?)',
+      `INSERT INTO cart_items (cart_id, product_id, quantity, created_at, updated_at) VALUES (1, ${productId}, ${quantity}, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP)`
     )
 
     // Fetch updated cart items
     const [cartItems] = await connection.query(
-      'SELECT * FROM cart_items WHERE product_id = ?',
-      [productId]
+      `SELECT * FROM cart_items WHERE product_id = ${productId}`
     )
 
     // Return the updated cart items

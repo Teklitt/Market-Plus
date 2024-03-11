@@ -73,11 +73,38 @@ function App() {
   }
   console.log(cart)
 
+  // const handleAddToCart = async (productId, quantity) => {
+  //   const item = await commerce.cart.add(productId, quantity)
+  //   setCart(item)
+  //   // console.log(item)
+  //   // console.log(cart)
+  // }
   const handleAddToCart = async (productId, quantity) => {
-    const item = await commerce.cart.add(productId, quantity)
-    setCart(item)
-    // console.log(item)
-    // console.log(cart)
+    try {
+      const response = await fetch('http://localhost:3001/api/add-to-cart', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          productId: productId,
+          quantity: quantity,
+          userId: userId, // Assuming userId is defined elsewhere in your code
+        }),
+      })
+      console.log(response.data)
+      if (!response.ok) {
+        throw new Error('Failed to add item to cart')
+      }
+
+      // Assuming the response contains the updated cart data
+      const data = await response.json()
+      setCart(data)
+
+      console.log('Item added to cart successfully')
+    } catch (error) {
+      console.error('Error adding item to cart:', error)
+    }
   }
 
   const handleUpdateCartQty = async (productId, quantity) => {
@@ -130,7 +157,7 @@ function App() {
     <BrowserRouter>
       <div className="App">
         <NavBar
-          totalItems={cart.total_items}
+          totalItems={cart.length}
           onCategoryChange={handleCategoryClick}
         />
         <Carousel />
