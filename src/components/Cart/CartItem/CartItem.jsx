@@ -14,7 +14,7 @@ const CartItem = ({ item, onUpdateCartQty, onRemoveFromCart }) => {
   const handleUpdateCartQty = (lineItemId, newQuantity) =>
     onUpdateCartQty(lineItemId, newQuantity)
 
-  const handleRemoveFromCart = (lineItemId) => onRemoveFromCart(lineItemId)
+  const handleRemoveFromCart = () => onRemoveFromCart(item.product_id)
   return (
     <div className=".container">
       <Card
@@ -42,7 +42,9 @@ const CartItem = ({ item, onUpdateCartQty, onRemoveFromCart }) => {
             <Button
               type="button"
               size="small"
-              onClick={() => handleUpdateCartQty(item.id, item.quantity - 1)}
+              onClick={() =>
+                handleUpdateCartQty(item.productId, item.quantity - 1)
+              }
             >
               -
             </Button>
@@ -55,7 +57,9 @@ const CartItem = ({ item, onUpdateCartQty, onRemoveFromCart }) => {
             <Button
               type="button"
               size="small"
-              onClick={() => handleUpdateCartQty(item.id, item.quantity + 1)}
+              onClick={() =>
+                handleUpdateCartQty(item.productId, item.quantity + 1)
+              }
             >
               +
             </Button>
@@ -65,7 +69,7 @@ const CartItem = ({ item, onUpdateCartQty, onRemoveFromCart }) => {
             variant="solid"
             color="danger"
             size="sm"
-            onClick={() => handleRemoveFromCart(item.id)}
+            onClick={() => handleRemoveFromCart(item.product_id)}
           >
             Remove
           </Button>

@@ -18,7 +18,7 @@ import Category1 from './components/Category1/Category1.jsx'
 function App() {
   const [products, setProducts] = useState([])
 
-  const [cart, setCart] = useState({ line_items: [] })
+  const [cart, setCart] = useState([])
   const [order, setOrder] = useState({})
   const [errorMessage, setErrorMessage] = useState('')
   const [selectedCategory, setSelectedCategory] = useState(null)
@@ -66,12 +66,13 @@ function App() {
         throw new Error('Failed to fetch cart')
       }
       const data = await response.json()
+      //console.log('Fetched Cart Data:', data)
       setCart(data) // Assuming setCart is a state setter function
     } catch (error) {
       console.error('Error fetching cart:', error)
     }
   }
-  console.log(cart)
+  //console.log('cart items:', cart)
 
   // const handleAddToCart = async (productId, quantity) => {
   //   const item = await commerce.cart.add(productId, quantity)
@@ -92,14 +93,14 @@ function App() {
           userId: userId, // Assuming userId is defined elsewhere in your code
         }),
       })
-      console.log(response.data)
+
       if (!response.ok) {
         throw new Error('Failed to add item to cart')
       }
 
-      // Assuming the response contains the updated cart data
-      const data = await response.json()
-      setCart(data)
+      // Update the cart with the response data
+      const cart = await response.json()
+      setCart(cart)
 
       console.log('Item added to cart successfully')
     } catch (error) {
@@ -107,16 +108,67 @@ function App() {
     }
   }
 
-  const handleUpdateCartQty = async (productId, quantity) => {
-    const item = await commerce.cart.update(productId, { quantity })
+  // const handleUpdateCartQty = async (productId, quantity) => {
+  //   const item = await commerce.cart.update(productId, { quantity })
 
-    setCart(item)
+  //   setCart(item)
+  // }
+  const handleUpdateCartQty = async (productId, quantity) => {
+    try {
+      const response = await fetch('/api/cart/update', {
+        method: 'PUT',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          productId: productId,
+          quantity: quantity,
+        }),
+      })
+
+      if (!response.ok) {
+        throw new Error('Failed to update cart quantity')
+      }
+
+      // Assuming setCart is a state setter function
+      // You may need to handle response data based on your API response
+      setCart(response.data)
+    } catch (error) {
+      console.error('Error updating cart quantity:', error)
+    }
   }
 
-  const handleRemoveFromCart = async (productId) => {
-    const item = await commerce.cart.remove(productId)
+  // const handleRemoveFromCart = async (productId) => {
+  //   const item = await commerce.cart.remove(productId)
 
-    setCart(item)
+  //   setCart(item)
+  // }
+  const handleRemoveFromCart = async (productId) => {
+    try {
+      console.log('test')
+      const response = await fetch(
+        'http://localhost:3001/api/remove-item-from-cart',
+        {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({
+            productId: productId,
+            userId: userId,
+          }),
+        }
+      )
+      if (!response.ok) {
+        throw new Error('Failed to remove item from cart')
+      }
+      const data = await response.json()
+      setCart(data) // Assuming setCart is a state setter function
+      console.log('data log:', data)
+      console.log('Item removed from cart successfully')
+    } catch (error) {
+      console.error('Error removing item from cart:', error)
+    }
   }
 
   const handleEmptyCart = async () => {
