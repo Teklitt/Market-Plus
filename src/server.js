@@ -8,6 +8,7 @@ const addtocartRouter = require('./endpoints/add-to-cart')
 const updatecartRouter = require('./endpoints/update-cart-quantity')
 const removecartRouter = require('./endpoints/remove-item-from-cart')
 const emptycartRouter = require('./endpoints/empty-cart')
+const checkoutRouter = require('./endpoints/checkout')
 
 const app = express()
 const port = 3001
@@ -24,6 +25,7 @@ app.use('/api', addtocartRouter)
 app.use('/api', updatecartRouter)
 app.use('/api', removecartRouter)
 app.use('/api', emptycartRouter)
+app.use('/api', checkoutRouter)
 
 app.listen(port, () => {
   console.log(`Server running on port ${port}`)

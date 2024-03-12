@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useState } from 'react'
 import {
   Paper,
   Stepper,
@@ -10,187 +10,134 @@ import {
   Button,
   CssBaseline,
   useTheme,
-  spacing,
 } from '@mui/material'
 
-import { commerce } from '../../../lib/commerce'
-import AddressForm from '../AddressForm'
-import PaymentForm from '../PaymentForm'
-import { useState, useEffect } from 'react'
-import { Link, useNavigate } from 'react-router-dom'
-
 const steps = ['Shipping address', 'Payment details']
-const Checkout = ({ cart, onCaptureCheckout, order, error }) => {
+
+const Checkout = ({ cart, onCheckout }) => {
   const theme = useTheme()
-  const styles = {
-    toolbar: theme.mixins.toolbar,
-    layout: {
-      marginTop: '5%',
-      width: 'auto',
-      marginLeft: theme.spacing(2),
-      marginRight: theme.spacing(2),
-      [theme.breakpoints.up(600 + theme.spacing(2) * 2)]: {
-        width: 600,
-        marginLeft: 'auto',
-        marginRight: 'auto',
-      },
-    },
-
-    // ... other styles
-    paper: {
-      marginTop: theme.spacing(3),
-      marginBottom: theme.spacing(3),
-      padding: theme.spacing(5),
-      [theme.breakpoints.down('xs')]: {
-        width: '100%',
-        marginTop: 60,
-      },
-      [theme.breakpoints.up(600 + theme.spacing(3) * 2)]: {
-        marginTop: theme.spacing(6),
-        marginBottom: theme.spacing(6),
-        padding: theme.spacing(3),
-      },
-    },
-    stepper: {
-      padding: theme.spacing(3, 0, 5),
-    },
-    buttons: {
-      display: 'flex',
-      justifyContent: 'flex-end',
-    },
-    button: {
-      marginTop: theme.spacing(3),
-      marginLeft: theme.spacing(1),
-    },
-    divider: {
-      margin: '20px 0',
-    },
-    spinner: {
-      display: 'flex',
-      justifyContent: 'center',
-      alignItems: 'center',
-    },
-  }
-
-  const [checkoutToken, setCheckoutToken] = useState(null)
   const [activeStep, setActiveStep] = useState(0)
-  const [shippingData, setShippingData] = useState({})
   const [isFinished, setIsFinished] = useState(false)
-  const navigate = useNavigate()
 
-  const nextStep = () => setActiveStep((prevActiveStep) => prevActiveStep + 1)
-  const backStep = () => setActiveStep((prevActiveStep) => prevActiveStep - 1)
-
-  useEffect(() => {
-    if (cart.id) {
-      const generateToken = async () => {
-        try {
-          const token = await commerce.checkout.generateToken(cart.id, {
-            type: 'cart',
-          })
-          console.log(token)
-          setCheckoutToken(token)
-        } catch {
-          if (activeStep !== steps.length) navigate.push('/')
-        }
-      }
-
-      generateToken()
-    }
-  }, [cart])
-
-  const test = (data) => {
-    setShippingData(data)
-
-    nextStep()
+  const handleNext = () => {
+    setActiveStep((prevActiveStep) => prevActiveStep + 1)
   }
-  const timeout = () => {
-    setTimeout(() => {
+
+  const handleBack = () => {
+    setActiveStep((prevActiveStep) => prevActiveStep - 1)
+  }
+
+  // const handleConfirmation = () => {
+  //   setIsFinished(true)
+  // }
+  const handleConfirmation = async () => {
+    try {
+      // Show the spinning bar
       setIsFinished(true)
-    }, 3000)
+      console.log('in handle confirmation')
+      // Call the onCheckout function passed from app.js
+      await onCheckout()
+
+      // After successful checkout, display the spinning bar for 5 seconds
+      setTimeout(() => {
+        setIsFinished(false)
+        setActiveStep(steps.length) // Proceed to the end step
+      }, 5000)
+    } catch (error) {
+      // Handle any errors that occur during the checkout process
+      console.error('Error during checkout:', error)
+      // Optionally, display an error message to the user
+      setIsFinished(false)
+    }
   }
 
-  let Confirmation = () =>
-    order.customer ? (
-      <>
-        <div>
-          <Typography variant="h5">
-            Thank you for your purchase, {order.customer.firstname}{' '}
-            {order.customer.lastname}!
-          </Typography>
-          <Divider sx={styles.divider} />
-          <Typography variant="subtitle2">
-            Order ref: {order.customer_reference}
-          </Typography>
-        </div>
-        <br />
-        <Button
-          component={Link}
-          variant="outlined"
-          type="button"
-          to="/Products"
-        >
-          Back to home
-        </Button>
-      </>
-    ) : (
-      <div sx={styles.spinner}>
-        <CircularProgress />
-      </div>
-    )
-
-  if (error) {
-    Confirmation = () => (
-      <>
-        <Typography variant="h5">Error: {error}</Typography>
-        <br />
-        <Button component={Link} variant="outlined" type="button" to="/">
-          Back to home
-        </Button>
-      </>
-    )
+  const getStepContent = (step) => {
+    switch (step) {
+      case 0:
+        return 'Shipping address form'
+      case 1:
+        return 'Payment form'
+      default:
+        return 'Unknown step'
+    }
   }
-
-  const Form = () =>
-    activeStep === 0 ? (
-      <AddressForm
-        checkoutToken={checkoutToken}
-        nextStep={nextStep}
-        setShippingData={setShippingData}
-        test={test}
-      />
-    ) : (
-      <PaymentForm
-        checkoutToken={checkoutToken}
-        nextStep={nextStep}
-        backStep={backStep}
-        shippingData={shippingData}
-        onCaptureCheckout={onCaptureCheckout}
-        timeout={timeout}
-      />
-    )
 
   return (
     <>
       <CssBaseline />
-      <div sx={styles.toolbar} />
-      <main sx={styles.layout}>
-        <Paper sx={styles.paper}>
+      <div style={{ margin: '20px' }} />
+      <main style={{ display: 'flex', justifyContent: 'center' }}>
+        <Paper style={{ padding: '20px', maxWidth: '600px' }}>
           <Typography variant="h4" align="center">
             Checkout
           </Typography>
-          <Stepper activeStep={activeStep} sx={styles.stepper}>
+          <Stepper activeStep={activeStep} style={{ marginTop: '20px' }}>
             {steps.map((label) => (
               <Step key={label}>
                 <StepLabel>{label}</StepLabel>
               </Step>
             ))}
           </Stepper>
-          {activeStep === steps.length ? (
-            <Confirmation />
-          ) : (
-            checkoutToken && <Form />
-          )}
+          <div style={{ textAlign: 'center' }}>
+            {activeStep === steps.length ? (
+              <div>
+                <Typography variant="h5">
+                  Thank you for your purchase!
+                </Typography>
+                <Divider style={{ margin: '10px 0' }} />
+                <Button
+                  component="a"
+                  href="/Products"
+                  variant="outlined"
+                  color="primary"
+                >
+                  Back to home
+                </Button>
+              </div>
+            ) : (
+              <div>
+                <Typography variant="h5">
+                  {getStepContent(activeStep)}
+                </Typography>
+                {isFinished ? (
+                  <div
+                    style={{
+                      display: 'flex',
+                      justifyContent: 'center',
+                      marginTop: '20px',
+                    }}
+                  >
+                    <CircularProgress />
+                  </div>
+                ) : (
+                  <div
+                    style={{
+                      display: 'flex',
+                      justifyContent: 'space-between',
+                      marginTop: '20px',
+                    }}
+                  >
+                    <Button disabled={activeStep === 0} onClick={handleBack}>
+                      Back
+                    </Button>
+                    <Button
+                      variant="contained"
+                      color="primary"
+                      onClick={
+                        activeStep === steps.length - 1
+                          ? handleConfirmation
+                          : handleNext
+                      }
+                    >
+                      {activeStep === steps.length - 1
+                        ? 'Complete Purchase'
+                        : 'Next'}
+                    </Button>
+                  </div>
+                )}
+              </div>
+            )}
+          </div>
         </Paper>
       </main>
     </>

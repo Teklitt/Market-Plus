@@ -27,10 +27,7 @@ function App() {
     setSelectedCategory(category)
   }
   //console.log('selectedCategory in App:', selectedCategory)
-  // const fetchProducts = async () => {
-  //   const { data } = await commerce.products.list({ limit: 100 })
-  //   setProducts(data)
-  // }
+
   const fetchProducts = async () => {
     try {
       const response = await fetch('http://localhost:3001/api/product')
@@ -72,14 +69,7 @@ function App() {
       console.error('Error fetching cart:', error)
     }
   }
-  //console.log('cart items:', cart)
 
-  // const handleAddToCart = async (productId, quantity) => {
-  //   const item = await commerce.cart.add(productId, quantity)
-  //   setCart(item)
-  //   // console.log(item)
-  //   // console.log(cart)
-  // }
   const handleAddToCart = async (productId, quantity) => {
     try {
       const response = await fetch('http://localhost:3001/api/add-to-cart', {
@@ -108,11 +98,6 @@ function App() {
     }
   }
 
-  // const handleUpdateCartQty = async (productId, quantity) => {
-  //   const item = await commerce.cart.update(productId, { quantity })
-
-  //   setCart(item)
-  // }
   const handleUpdateCartQty = async (productId, quantity) => {
     try {
       const response = await fetch(
@@ -144,11 +129,6 @@ function App() {
     }
   }
 
-  // const handleRemoveFromCart = async (productId) => {
-  //   const item = await commerce.cart.remove(productId)
-
-  //   setCart(item)
-  // }
   const handleRemoveFromCart = async (productId) => {
     try {
       const response = await fetch(
@@ -202,6 +182,33 @@ function App() {
     const newCart = await commerce.cart.refresh()
 
     setCart(newCart)
+  }
+
+  const handleCheckout = async () => {
+    console.log('got into handle checkout')
+    try {
+      const response = await fetch('http://localhost:3001/api/checkout', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          userId: userId, // Include any necessary data
+        }),
+      })
+
+      if (!response.ok) {
+        throw new Error('Failed to checkout')
+      }
+
+      // Handle the successful checkout response
+      const data = await response.json()
+      console.log('Checkout successful:', data)
+      // Optionally, perform any additional actions after successful checkout
+    } catch (error) {
+      console.error('Error during checkout:', error)
+      // Handle the error (e.g., show an error message to the user)
+    }
   }
 
   const handleCaptureCheckout = async (checkoutTokenId, newOrder) => {
@@ -273,6 +280,8 @@ function App() {
                   order={order}
                   onCaptureCheckout={handleCaptureCheckout}
                   error={errorMessage}
+                  onCheckout={handleCheckout}
+                  // onCheckout={() => console.log('Mock function called')} // Mock function
                 />
               }
             />
