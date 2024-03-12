@@ -19,7 +19,7 @@ CREATE TABLE user (
 --- Table structure for `products`
 CREATE TABLE product (
   id SMALLINT UNSIGNED NOT NULL AUTO_INCREMENT PRIMARY KEY,
-  image BLOB NOT NULL,
+  image TEXT NOT NULL,
   description TEXT NOT NULL,
   name VARCHAR(45) NOT NULL,
   price DECIMAL(10, 2) NOT NULL,
@@ -34,7 +34,7 @@ CREATE TABLE category (
   title VARCHAR(100) NOT NULL,
   description TEXT NOT NULL,
   status VARCHAR(10) DEFAULT NULL,
-  image BLOB DEFAULT NULL,
+  image TEXT DEFAULT NULL,
 );
 
 --- Table structure for `carts`
