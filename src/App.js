@@ -115,16 +115,20 @@ function App() {
   // }
   const handleUpdateCartQty = async (productId, quantity) => {
     try {
-      const response = await fetch('/api/cart/update', {
-        method: 'PUT',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({
-          productId: productId,
-          quantity: quantity,
-        }),
-      })
+      const response = await fetch(
+        'http://localhost:3001/api/update-cart-quantity',
+        {
+          method: 'PUT',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({
+            productId: productId,
+            quantity: quantity,
+            userId: userId,
+          }),
+        }
+      )
 
       if (!response.ok) {
         throw new Error('Failed to update cart quantity')
@@ -132,7 +136,9 @@ function App() {
 
       // Assuming setCart is a state setter function
       // You may need to handle response data based on your API response
-      setCart(response.data)
+      const cart = await response.json()
+      setCart(cart)
+      console.log('quantity updated successfully')
     } catch (error) {
       console.error('Error updating cart quantity:', error)
     }
@@ -145,7 +151,6 @@ function App() {
   // }
   const handleRemoveFromCart = async (productId) => {
     try {
-      console.log('test')
       const response = await fetch(
         'http://localhost:3001/api/remove-item-from-cart',
         {
@@ -172,9 +177,25 @@ function App() {
   }
 
   const handleEmptyCart = async () => {
-    const item = await commerce.cart.empty()
-
-    setCart(item)
+    try {
+      const response = await fetch('http://localhost:3001/api/empty-cart', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          userId: userId,
+        }),
+      })
+      if (!response.ok) {
+        throw new Error('Failed to empty cart')
+      }
+      const data = await response.json()
+      setCart(data) // Assuming setCart is a state setter functio
+      console.log('Items removed from cart successfully')
+    } catch (error) {
+      console.error('Error removing items from cart:', error)
+    }
   }
 
   const refreshCart = async () => {
@@ -209,7 +230,7 @@ function App() {
     <BrowserRouter>
       <div className="App">
         <NavBar
-          totalItems={cart.length}
+          totalItems={cart?.length ?? 0}
           onCategoryChange={handleCategoryClick}
         />
         <Carousel />

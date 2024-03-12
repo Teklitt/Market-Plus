@@ -175,7 +175,10 @@ const NavBar = ({ totalItems, onCategoryChange }) => {
                   aria-label="Show cart items"
                   color="inherit"
                 >
-                  <Badge badgeContent={totalItems} color="secondary">
+                  <Badge
+                    badgeContent={totalItems === 0 ? 0 : totalItems}
+                    color="secondary"
+                  >
                     <ShoppingCartIcon />
                   </Badge>
                 </IconButton>

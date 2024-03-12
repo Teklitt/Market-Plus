@@ -11,8 +11,8 @@ import Link from '@mui/joy/Link'
 import Typography from '@mui/joy/Typography'
 
 const CartItem = ({ item, onUpdateCartQty, onRemoveFromCart }) => {
-  const handleUpdateCartQty = (lineItemId, newQuantity) =>
-    onUpdateCartQty(lineItemId, newQuantity)
+  const handleUpdateCartQty = (product_id, newQuantity) =>
+    onUpdateCartQty(product_id, newQuantity)
 
   const handleRemoveFromCart = () => onRemoveFromCart(item.product_id)
   return (
@@ -43,7 +43,7 @@ const CartItem = ({ item, onUpdateCartQty, onRemoveFromCart }) => {
               type="button"
               size="small"
               onClick={() =>
-                handleUpdateCartQty(item.productId, item.quantity - 1)
+                handleUpdateCartQty(item.product_id, item.quantity - 1)
               }
             >
               -
@@ -58,7 +58,7 @@ const CartItem = ({ item, onUpdateCartQty, onRemoveFromCart }) => {
               type="button"
               size="small"
               onClick={() =>
-                handleUpdateCartQty(item.productId, item.quantity + 1)
+                handleUpdateCartQty(item.product_id, item.quantity + 1)
               }
             >
               +

@@ -14,16 +14,12 @@ const Cart = ({ cart, onUpdateCartQty, onRemoveFromCart, onEmptyCart }) => {
     cart.forEach((item) => {
       subtotal += item.price * item.quantity // Assuming each item has a 'price' and 'quantity' property
     })
-    return subtotal
+    return subtotal.toFixed(2)
   }
   const theme = createTheme({})
   const EmptyCart = () => (
     <Typography variant="subtitle1">
-      You have no items in your shopping cart,
-      <Link to="/" className="link">
-        start adding items!
-      </Link>
-      !
+      You have no items in your shopping cart, you know what to do!
     </Typography>
   )
   const handleEmptyCart = () => onEmptyCart()

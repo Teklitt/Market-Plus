@@ -15,7 +15,6 @@ router.post('/add-to-cart', async (req, res) => {
     )
 
     if (existingCartItem.length > 0) {
-      console.log('got to the if statement')
       // If the product is already in the cart, update its quantity
       await connection.query(
         `UPDATE cart_items SET quantity = ? WHERE product_id = ? AND cart_id = ?`,
@@ -34,7 +33,6 @@ router.post('/add-to-cart', async (req, res) => {
       'SELECT P.name, P.image, P.price, CI.quantity, CI.product_id FROM cart_items AS CI INNER JOIN carts AS C ON C.id = CI.cart_id INNER JOIN product AS P ON CI.product_id = P.id WHERE C.user_id = ?;',
       [userId]
     )
-    console.log(cart)
     res.json(cart)
   } catch (error) {
     console.error('Error adding item to cart:', error)
