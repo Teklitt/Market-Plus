@@ -50,15 +50,13 @@ const LoginForm = ({ closeLoginForm }) => {
       //className="modal"
       style={{
         position: 'fixed',
-        top: '58%',
+        top: '80vh',
         left: '50%',
         width: '100%',
-        height: '100%',
+        height: '150vh',
         transform: 'translate(-50%, -50%)',
-        backgroundColor: 'rgba(0,0,0)',
         backgroundColor: 'rgba(0,0,0, 0.4)',
         padding: '20px',
-
         boxShadow: '0 4px 8px rgba(0, 0, 0, 50)',
         zIndex: '2',
         overflow: 'auto',
