@@ -10,7 +10,9 @@ In your terminal:
 
 ### `create a .env in root directory of your project folder and  add your API keys to it:`
 
-### `npm start`
+chahged script to run front end and back end server concurrently
+
+### `npm run dev`
 
 Runs the app in the development mode.\
 Open [http://localhost:3000](http://localhost:3000) to view it in your browser.
@@ -20,6 +22,5 @@ You may also see any lint errors in the console.
 
 npm install
 
-npm install @chec/commerce.js
 npm install firebase
 npm install react-router-dom
